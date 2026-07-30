@@ -16,17 +16,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-def extract_text_from_pdf(file_path):
-    text = ""
-
-    pdf = fitz.open(file_path)
-
-    for page in pdf:
-        text += page.get_text()
-
-    pdf.close()
-
-    return text
+from services.pdf_reader import extract_text_from_pdf
 
 @app.get("/")
 def home():

@@ -1,5 +1,6 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from services.chunker import chunk_text
 import os
 import shutil
 import fitz
@@ -22,7 +23,10 @@ from services.pdf_reader import extract_text_from_pdf
 def home():
     
     return {"message": "Backend is working!"}
-    # Upload endpoint
+
+from services.text_cleaner import clean_text
+
+
 @app.post("/upload")
 async def upload_pdf(file: UploadFile = File(...)):
 
@@ -36,9 +40,13 @@ async def upload_pdf(file: UploadFile = File(...)):
         shutil.copyfileobj(file.file, buffer)
 
     text = extract_text_from_pdf(file_path)
-
+    text = clean_text(text)
+    chunks = chunk_text(text)
+    
     return {
-        "message": "Upload successful",
-        "filename": file.filename,
-        "text": text
+    "message": "Upload successful",
+    "filename": file.filename,
+    "number_of_chunks": len(chunks),
+    "chunks": chunks
     }
+

@@ -1,47 +1,88 @@
-# ----------------------------
-# Python
-# ----------------------------
+# ---------- Python ----------
 __pycache__/
 *.py[cod]
-*.pyo
+*$py.class
 
-# Virtual environments
-.venv/
 venv/
+.venv/
+env/
+ENV/
 
-# ----------------------------
-# React / Node
-# ----------------------------
-frontend/node_modules/
-frontend/dist/
-
-# ----------------------------
-# Uploaded PDFs
-# ----------------------------
-backend/uploads/
-
-# ----------------------------
-# ChromaDB database
-# ----------------------------
-backend/chroma_db/
-
-# ----------------------------
-# Environment variables
-# ----------------------------
+# ---------- Environment ----------
 .env
 
-# ----------------------------
-# VS Code
-# ----------------------------
-.vscode/
+# ---------- Uploads ----------
+uploads/
 
-# ----------------------------
-# OS files
-# ----------------------------
+# ---------- Database ----------
+chroma_db/
+
+# ---------- React ----------
+node_modules/
+dist/
+.vite/
+
+# ---------- IDE ----------
+.vscode/
+.idea/
+
+# ---------- OS ----------
 .DS_Store
 Thumbs.db
 
-.env
-uploads/
+# ---------- Logs ----------
+*.log
+
+# ---------- Testing ----------
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Environment variables
+.env
+
+# Uploads
+uploads/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Build
+dist/
+build/
+
+# Pytest
+.pytest_cache/
+
+# Coverage
+.coverage
+htmlcov/
+
+# ChromaDB
+chroma_db/
+
+# Misc
+*.sqlite3
+
+node_modules/
+dist/
+.vite/

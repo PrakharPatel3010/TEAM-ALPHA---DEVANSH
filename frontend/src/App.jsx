@@ -114,9 +114,6 @@ function App() {
     >
       <h1>Research Paper Briefing Agent</h1>
 
-      <h3>Backend Status</h3>
-      <p>{message}</p>
-
       <hr />
 
       <h2>Select Research Paper</h2>

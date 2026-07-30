@@ -40,3 +40,8 @@ backend/chroma_db/
 # ----------------------------
 .DS_Store
 Thumbs.db
+
+.env
+uploads/
+__pycache__/
+*.pyc

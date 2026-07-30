@@ -1,19 +1,26 @@
 import { useEffect, useState } from "react";
 
 function App() {
-  // Backend status message
+  // Backend status
   const [message, setMessage] = useState("Loading...");
 
-  // Selected PDF file
+  // Selected PDF
   const [selectedFile, setSelectedFile] = useState(null);
 
-  // Extracted text from PDF
+  // Upload response
   const [pdfText, setPdfText] = useState("");
 
-  // Upload status
-  const [loading, setLoading] = useState(false);
+  // Uploaded filename
+  const [filename, setFilename] = useState("");
 
-  // Check if backend is running
+  // AI Summary
+  const [summary, setSummary] = useState(null);
+
+  // Loading states
+  const [loading, setLoading] = useState(false);
+  const [summaryLoading, setSummaryLoading] = useState(false);
+
+  // Check backend status
   useEffect(() => {
     fetch("http://127.0.0.1:8000/")
       .then((response) => response.json())
@@ -26,7 +33,7 @@ function App() {
       });
   }, []);
 
-  // Upload PDF to backend
+  // Upload PDF
   const uploadPDF = async () => {
     if (!selectedFile) {
       alert("Please select a PDF first.");
@@ -35,7 +42,6 @@ function App() {
 
     setLoading(true);
 
-    // Create form data
     const formData = new FormData();
     formData.append("file", selectedFile);
 
@@ -45,17 +51,56 @@ function App() {
         body: formData,
       });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    console.log("Backend Response:", data);
+      console.log(data);
 
-    setPdfText(JSON.stringify(data, null, 2));
+      setFilename(data.filename);
+      setPdfText(JSON.stringify(data, null, 2));
+
+      // Clear previous summary
+      setSummary(null);
+
     } catch (error) {
       console.error(error);
       alert("Upload failed.");
     }
 
     setLoading(false);
+  };
+
+  // Summarize uploaded paper
+  const summarizePaper = async () => {
+    if (!filename) {
+      alert("Upload a PDF first.");
+      return;
+    }
+
+    setSummaryLoading(true);
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/summarize", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          filename: filename,
+        }),
+      });
+
+      const data = await response.json();
+
+      console.log(data);
+
+      setSummary(data);
+
+    } catch (error) {
+      console.error(error);
+      alert("Summarization failed.");
+    }
+
+    setSummaryLoading(false);
   };
 
   return (
@@ -91,9 +136,17 @@ function App() {
         {loading ? "Uploading..." : "Upload PDF"}
       </button>
 
+      <button
+        onClick={summarizePaper}
+        disabled={!filename || summaryLoading}
+        style={{ marginLeft: "15px" }}
+      >
+        {summaryLoading ? "Generating..." : "Summarize Paper"}
+      </button>
+
       <hr />
 
-      <h2>Extracted Text</h2>
+      <h2>Upload Response</h2>
 
       <pre
         style={{
@@ -102,12 +155,41 @@ function App() {
           backgroundColor: "#f5f5f5",
           padding: "20px",
           borderRadius: "10px",
-          maxHeight: "500px",
+          maxHeight: "250px",
           overflowY: "scroll",
         }}
       >
         {pdfText}
       </pre>
+
+      {summary && (
+        <>
+          <hr />
+
+          <h2>AI Summary</h2>
+
+          <div
+            style={{
+              backgroundColor: "#f5f5f5",
+              padding: "20px",
+              borderRadius: "10px",
+              textAlign: "left",
+            }}
+          >
+            <h3>Overview</h3>
+            <p>{summary.overview}</p>
+
+            <h3>Methods</h3>
+            <p>{summary.methods}</p>
+
+            <h3>Results</h3>
+            <p>{summary.results}</p>
+
+            <h3>Limitations</h3>
+            <p>{summary.limitations}</p>
+          </div>
+        </>
+      )}
     </div>
   );
 }

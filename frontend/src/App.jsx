@@ -48,7 +48,7 @@ function App() {
       const data = await response.json();
 
       // Store extracted text
-      setPdfText(data.text);
+      setPdfText(data.chunks.join("\n\n"));
     } catch (error) {
       console.error(error);
       alert("Upload failed.");

@@ -4,6 +4,7 @@ from services.chunker import chunk_text
 import os
 import shutil
 from pydantic import BaseModel
+from services.retrieval_service import retrieve_chunks
 
 app = FastAPI()
 
@@ -52,6 +53,16 @@ async def upload_pdf(file: UploadFile = File(...)):
     "filename": file.filename,
     "chunks_created": len(chunks)
 }
+
+@app.post("/search")
+def search(request: SearchRequest):
+
+    results = retrieve_chunks(request.question)
+
+    return {
+        "question": request.question,
+        "documents": results["documents"][0]
+    }
 
 class SearchRequest(BaseModel):
     question: str

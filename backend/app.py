@@ -27,7 +27,6 @@ def home():
 from services.text_cleaner import clean_text
 from services.storage_service import store_chunks
 
-
 @app.post("/upload")
 async def upload_pdf(file: UploadFile = File(...)):
 
@@ -40,18 +39,16 @@ async def upload_pdf(file: UploadFile = File(...)):
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-     text = extract_text_from_pdf(file_path)
+    text = extract_text_from_pdf(file_path)
+    
+    text = clean_text(text)
 
-     text = clean_text(text)
+    chunks = chunk_text(text)
 
-     chunks = chunk_text(text)
-
-     store_chunks(chunks, file.filename)
-
+    store_chunks(chunks, file.filename)
+    
     return {
     "message": "Upload successful",
     "filename": file.filename,
-    "number_of_chunks": len(chunks),
-    "chunks": chunks
-    }
-
+    "chunks_created": len(chunks)
+}

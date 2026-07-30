@@ -45,10 +45,11 @@ function App() {
         body: formData,
       });
 
-      const data = await response.json();
+    const data = await response.json();
 
-      // Store extracted text
-      setPdfText(data.chunks.join("\n\n"));
+    console.log("Backend Response:", data);
+
+    setPdfText(JSON.stringify(data, null, 2));
     } catch (error) {
       console.error(error);
       alert("Upload failed.");

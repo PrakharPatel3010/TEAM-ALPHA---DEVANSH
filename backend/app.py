@@ -52,3 +52,10 @@ async def upload_pdf(file: UploadFile = File(...)):
     "filename": file.filename,
     "chunks_created": len(chunks)
 }
+from database.chroma_db import get_chunks_by_filename
+from summarize import summarize_text
+
+@app.get("/summarize/{filename}")
+def summarize(filename: str):
+    full_text = get_chunks_by_filename(filename)
+    return summarize_text(full_text)

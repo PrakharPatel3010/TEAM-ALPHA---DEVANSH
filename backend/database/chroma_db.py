@@ -24,3 +24,8 @@ def clear_collection():
     collection.delete(
         ids=collection.get()["ids"]
     )
+def get_chunks_by_filename(filename):
+    result = collection.get(where={"paper": filename})
+    # sort by chunk index so the text comes back in order
+    pairs = sorted(zip(result["metadatas"], result["documents"]), key=lambda x: x[0]["chunk"])
+    return " ".join(text for _, text in pairs)

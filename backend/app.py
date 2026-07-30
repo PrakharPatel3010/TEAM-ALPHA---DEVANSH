@@ -25,6 +25,7 @@ def home():
     return {"message": "Backend is working!"}
 
 from services.text_cleaner import clean_text
+from services.storage_service import store_chunks
 
 
 @app.post("/upload")
@@ -39,10 +40,14 @@ async def upload_pdf(file: UploadFile = File(...)):
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    text = extract_text_from_pdf(file_path)
-    text = clean_text(text)
-    chunks = chunk_text(text)
-    
+     text = extract_text_from_pdf(file_path)
+
+     text = clean_text(text)
+
+     chunks = chunk_text(text)
+
+     store_chunks(chunks, file.filename)
+
     return {
     "message": "Upload successful",
     "filename": file.filename,

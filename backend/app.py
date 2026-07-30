@@ -57,18 +57,7 @@ async def upload_pdf(file: UploadFile = File(...)):
     store_chunks(chunks, file.filename)
 
     return {
-        "message": "Upload successful",
-        "filename": file.filename,
-        "chunks_created": len(chunks),
-    }
-
-
-@app.post("/search")
-def search(request: SearchRequest):
-
-    results = retrieve_chunks(request.question)
-
-    return {
-        "question": request.question,
-        "documents": results["documents"][0],
-    }
+    "message": "Upload successful",
+    "filename": file.filename,
+    "chunks_created": len(chunks)
+}

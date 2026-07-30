@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from services.chunker import chunk_text
 import os
 import shutil
-import fitz
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -52,3 +52,6 @@ async def upload_pdf(file: UploadFile = File(...)):
     "filename": file.filename,
     "chunks_created": len(chunks)
 }
+
+class SearchRequest(BaseModel):
+    question: str
